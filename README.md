@@ -2,7 +2,7 @@
 
 <h2>👨‍💻 Cybersecurity Projects:</h2>
 
-- [Active Directory Home Lab](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
+- [Virtual Active Directory Environment in Azure](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - <h2>Certifications</h2>
 - <b>PowerShell</b>
