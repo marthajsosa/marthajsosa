@@ -5,7 +5,7 @@
 - [Virtual Active Directory Environment in Azure](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
-- [Vulnerability Management Lab]
+- [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
 - <h2>Certifications</h2>
 
 <h2>Technical Proficiencies</h2>
