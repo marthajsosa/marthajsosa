@@ -11,7 +11,7 @@
 <h2>Certifications</h2>
 
 <h2>Technical Proficiencies</h2>
-Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Azure Sentinel | KQL | Network Security Groups | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Nessus Essentials | Vulnerability Remediation | Coding/Web Development | Pentesting | Strong Intuition of APIs |
+Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Azure Sentinel | KQL | Network Security Groups | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Nessus Essentials | Vulnerability Remediation | Coding/Web Development | Pentesting | Strong Intuition of APIs | Splunk/SPL | 
 <br />
   - [Windows EventLog: Failed RDP Logins Source IP to full GeoData Conversion](https://github.com/joshmadakor1/Sentinel-Lab)
 - <b>Data Structures and Algorithms Practice (AlgoExpert)</b>
