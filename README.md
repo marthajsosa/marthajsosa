@@ -6,7 +6,9 @@
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
 - [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
-- <h2>Certifications</h2>
+- [Built REST API]
+
+<h2>Certifications</h2>
 
 <h2>Technical Proficiencies</h2>
 Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Azure Sentinel | KQL | Network Security Groups | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Nessus Essentials | Vulnerability Remediation |
