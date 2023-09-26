@@ -6,7 +6,10 @@
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
 - <h2>Certifications</h2>
-- <b>PowerShell</b>
+
+<h2>Technical Proficiencies</h2>
+Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Azure Sentinel | KQL | Network Security Groups | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) |
+<br />
   - [Windows EventLog: Failed RDP Logins Source IP to full GeoData Conversion](https://github.com/joshmadakor1/Sentinel-Lab)
 - <b>Data Structures and Algorithms Practice (AlgoExpert)</b>
   - [Praciting DS & Algos in Python](https://github.com/joshmadakor1/Algorithms-Practice)
