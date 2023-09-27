@@ -8,6 +8,13 @@
 - [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
 - [Built REST API](https://github.com/urmomtookurscreentime/RESTAPI)
 - [Splunk SIEM](https://github.com/urmomtookurscreentime/SplunkSIEM)
+- [Burp Suite]
+- [Nmap]
+- [Wireshark]
+- [John the Ripper] JTR Open Source
+- [Cain and Abel] Freeware
+- [Kali Linux]
+- [Metasploit]
 
 <h2>Certifications</h2>
 
