@@ -15,7 +15,8 @@
 - [Cain and Abel] Freeware
 - [Kali Linux]
 - [Metasploit]
-
+- [OSINT]
+- [Nessus, aircrack-nd, Acunetix, tcpdump, hashcat, sqlmap]
 <h2>Certifications</h2>
 
 <h2>Technical Proficiencies</h2>
