@@ -2,7 +2,7 @@
 
 <h2>👨‍💻 Cybersecurity Projects:</h2>
 
-- [Virtual Active Directory Environment in Azure](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
+- [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
 - [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
