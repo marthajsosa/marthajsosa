@@ -7,6 +7,8 @@
 - [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
 - [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
 
+<h2>👨‍💻 Scripting Projects:</h2>
+- [SQL](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 <h2>Certifications</h2>
 
 <h2>Technical Proficiencies</h2>
