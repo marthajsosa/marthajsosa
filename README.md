@@ -18,6 +18,13 @@ Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Az
 <h2> 🤳 Connect with me:</h2>
 
 [<img align="left" alt="JoshMadakor | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
+</b>
+</b>
+
+<h2> Memberships and Organizations:</h2>
+
+something
+
 
 
 [linkedin]: https://www.linkedin.com/in/martha-vasquez-sosa-b0b28510b/
