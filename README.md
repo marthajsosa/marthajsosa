@@ -4,15 +4,15 @@
 
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
-- [Create File Integrity Monitor](https://github.com/urmomtookurscreentime/FileIntegrityMonitor)
-- [Vulnerability Management Lab](https://github.com/urmomtookurscreentime/VulnerabilityManagement)
 
-<h2>👨‍💻 Scripting Projects:</h2>
-- [SQL](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
-<h2>Certifications</h2>
+<h2>Scripting Experience:</h2>
+- Python | Java | SQL | KQL | Splunk (SPL) | Powershell | nmap | HTML
+
+<h2>Certifications:</h2>
+ISC² Cybersecurity Certificate
 
 <h2>Technical Proficiencies</h2>
-Powershell | Hashing Algorithms (SHA-512, etc.) | Automation | Azure Portal | Azure Sentinel | KQL | Network Security Groups | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Nessus Essentials | Vulnerability Remediation | Coding/Web Development | Pentesting | Strong Intuition of APIs | Splunk/SPL | 
+Powershell | Automation | Azure Portal | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
 
 
 <h2> 🤳 Connect with me:</h2>
