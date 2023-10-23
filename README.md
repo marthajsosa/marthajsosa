@@ -4,6 +4,7 @@
 
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
+- [Create Dashboard in Splunk](https://github.com/marthajsosa/SplunkSIEM)
 
 <h2>Language Experience:</h2>
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
@@ -16,7 +17,16 @@
 
 <h2>Technical Proficiencies</h2>
 Powershell | Automation | Azure Portal | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
-
+</b>
+<h2> Education:</h2>
+B.S. Cybersecurity & Information Assurance
+<br/>Western Governors University
+<br/>Projected Graduation: April 2024
+<br/>
+<br/>
+B.S. Elementary Education
+<br/>Southeastern University
+<br/>Music Minor
 
 <h2> 🤳 Connect with me:</h2>
 
@@ -24,13 +34,7 @@ Powershell | Automation | Azure Portal | Azure Sentinel | Active Directory | Win
 </b>
 </b>
 
-<h2> Memberships and Organizations:</h2>
-
-something
-
-
-
-[linkedin]: https://www.linkedin.com/in/martha-vasquez-sosa-b0b28510b/
+[linkedin]: [https://www.linkedin.com/in/martha-vasquez-sosa-b0b28510b/](https://www.linkedin.com/in/martha-vasquez-sosa/)
 
 <!--
 **joshmadakor1/joshmadakor1** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
