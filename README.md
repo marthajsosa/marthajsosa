@@ -16,6 +16,7 @@
 
 - [ISC² Cybersecurity Certificate](https://github.com/marthajsosa/marthajsosa/files/13069977/CC.1.1.pdf)
 - [Google Cybersecurity Certification](https://github.com/marthajsosa/marthajsosa/files/13070020/Coursera.V2D8RL8MWAKK.1.pdf)
+- Currently studying for: Comptia A+, Security+, Network+, CySA+
 
 
 <h2>Technical Proficiencies</h2>
