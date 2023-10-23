@@ -5,8 +5,8 @@
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 
-<h2>Scripting Experience:</h2>
-- Python | Java | SQL | KQL | Splunk (SPL) | Powershell | nmap | HTML
+<h2>Language Experience:</h2>
+- Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
 
 <h2>Certifications:</h2>
 
