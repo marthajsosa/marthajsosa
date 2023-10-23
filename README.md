@@ -6,6 +6,7 @@
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create Dashboard in Splunk](https://github.com/marthajsosa/SplunkSIEM)
 - [Create and Manipulate Database in MySQL](https://github.com/marthajsosa/Create-and-Manipulate-Database)
+- [Project Management](https://github.com/marthajsosa/projectmanagment)
 
 <h2>Language Experience:</h2>
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
