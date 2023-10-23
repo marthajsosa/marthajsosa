@@ -9,7 +9,6 @@
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | nmap | HTML
 
 <h2>Certifications:</h2>
-- [ISC² Cybersecurity Certificate](https://github.com/marthajsosa/marthajsosa/files/13069977/CC.1.1.pdf)
 
 - [ISC² Cybersecurity Certificate](https://github.com/marthajsosa/marthajsosa/files/13069977/CC.1.1.pdf)
 
