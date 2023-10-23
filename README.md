@@ -11,7 +11,7 @@
 <h2>Certifications:</h2>
 - [ISC² Cybersecurity Certificate](https://github.com/marthajsosa/marthajsosa/files/13069977/CC.1.1.pdf)
 
-- [ISC² Cybersecurity Certificate](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
+- [ISC² Cybersecurity Certificate](https://github.com/marthajsosa/marthajsosa/files/13069977/CC.1.1.pdf)
 
 <h2>Technical Proficiencies</h2>
 Powershell | Automation | Azure Portal | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
