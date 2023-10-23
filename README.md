@@ -1,10 +1,11 @@
 <h1>Hi, I'm Martha! <br/>Entrepreneur | Cybersecurity | Educator | Creator</h1>
 
-<h2>👨‍💻 Cybersecurity Projects:</h2>
+<h2>👨‍💻 Personal Projects:</h2>
 
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create Dashboard in Splunk](https://github.com/marthajsosa/SplunkSIEM)
+- [Create and Manipulate Database in MySQL](https://github.com/marthajsosa/Create-and-Manipulate-Database)
 
 <h2>Language Experience:</h2>
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
