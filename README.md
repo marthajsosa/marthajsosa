@@ -16,8 +16,9 @@
 
 - ISC² Cybersecurity Certificate
 - CompTIA A+
-- Comptia Network+
-- Currently studying for Security+, Network+, CySA+
+- CompTIA Network+
+- CompTIA Security+
+- Currently studying for ITIL4 and Linux Essentials
 
 
 <h2>Technical Proficiencies</h2>
