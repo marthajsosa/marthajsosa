@@ -14,11 +14,12 @@
 
 <h2>Certifications:</h2>
 
-- ISC² Cybersecurity Certificate
+- (ISC)² Cybersecurity Certificate
 - CompTIA A+
 - CompTIA Network+
 - CompTIA Security+
-- Currently studying for ITIL4 and Linux Essentials
+- ITIL 4 Foundations
+- Currently studying for LPI Linux Essentials and (ISC)² SSCP (Expected January 2024)
 
 
 <h2>Technical Proficiencies</h2>
