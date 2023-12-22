@@ -2,6 +2,7 @@
 
 <h2>👨‍💻 Personal Projects:</h2>
 
+- [Digital Forensic Investigation in Autopsy](https://github.com/marthajsosaAutopsyDigitalForensics)
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create Dashboard in Splunk](https://github.com/marthajsosa/SplunkSIEM)
