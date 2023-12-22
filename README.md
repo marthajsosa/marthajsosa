@@ -1,7 +1,7 @@
 <h1>Hi, I'm Martha! <br/>Entrepreneur | Cybersecurity | Educator | Creator</h1>
 
 <h2>👨‍💻 Personal Projects:</h2>
-
+- [Digital Forensic Investigation in Autopsy](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Virtual Active Directory Environment in Oracle VirtualBox](https://github.com/urmomtookurscreentime/ActiveDirectoryLab)
 - [Setup SIEM in Azure](https://github.com/urmomtookurscreentime/SetupSIEMinAzure)
 - [Create Dashboard in Splunk](https://github.com/marthajsosa/SplunkSIEM)
@@ -18,7 +18,8 @@
 - CompTIA A+
 - CompTIA Network+
 - CompTIA Security+
-- Currently studying for ITIL4 and Linux Essentials
+- ITIL 4 Foundations
+- Currently studying for Linux Essentials and ISC² SSCP (expected January 2024)
 
 
 <h2>Technical Proficiencies</h2>
