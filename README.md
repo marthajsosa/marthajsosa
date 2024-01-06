@@ -1,4 +1,4 @@
-<h1>Hi, I'm Martha! <br/>Entrepreneur | Cybersecurity | Educator | Creator</h1>
+<h1>Hi, I'm Martha! <br/>Cybersecurity | Educator | Creator</h1>
 
 <h2>👨‍💻 Personal Projects:</h2>
 
@@ -20,7 +20,8 @@
 - CompTIA Network+
 - CompTIA Security+
 - ITIL 4 Foundations
-- Currently studying for LPI Linux Essentials and (ISC)² SSCP (Expected January 2024)
+- Associate of ISC² for SSCP
+- Studying for CompTIA Cysa+ - Expected January 2024
 
 
 <h2>Technical Proficiencies</h2>
