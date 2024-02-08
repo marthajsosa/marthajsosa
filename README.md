@@ -15,13 +15,14 @@
 
 <h2>Certifications:</h2>
 
+- CompTIA CySA+
 - (ISC)² Cybersecurity Certificate
 - CompTIA A+
 - CompTIA Network+
 - CompTIA Security+
 - ITIL 4 Foundations
 - Associate of ISC² for SSCP
-- Studying for CompTIA Cysa+ - Expected January 2024
+- Studying for CompTIA PenTest+ and (ISC)² CCSP - Expected February 2024
 
 
 <h2>Technical Proficiencies</h2>
