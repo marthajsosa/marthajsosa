@@ -1,5 +1,9 @@
 <h1>Hi, I'm Martha! <br/>Cybersecurity | Educator | Creator</h1>
 
+<h2>👨‍💻 CrowdStrike Queries:</h2>
+
+<h2>👨‍💻 CrowdStrike Workflows:</h2>
+
 <h2>👨‍💻 Personal Projects:</h2>
 
 - [Digital Forensic Investigation in Autopsy](https://github.com/marthajsosa/AutopsyDigitalForensics)
@@ -14,40 +18,34 @@
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
 
 <h2>Certifications:</h2>
+●	ISC² Systems Security Certified Practitioner (SSCP)
+●	CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
 
-- CompTIA CySA+
-- (ISC)² Cybersecurity Certificate
-- CompTIA A+
-- CompTIA Network+
-- CompTIA Security+
-- ITIL 4 Foundations
-- Associate of ISC² for SSCP
-- Studying for CompTIA PenTest+ and (ISC)² CCSP - Expected February 2024
+- ISC² Systems Security Certified Practitioner (SSCP)
+- CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
 
 
 <h2>Technical Proficiencies</h2>
-Powershell | Automation | Azure Portal | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
+CrowdStrike SOAR Automation | Process Documentation & Technical Writing | Security Operations Automation | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
 </b>
 <h2> Education:</h2>
+M.S. Cybersecurity & Information Assurance
+<br/>Projected Graduation: May 2025
+<br/>
 B.S. Cybersecurity & Information Assurance
-<br/>Western Governors University
-<br/>Projected Graduation: April 2024
 <br/>
 <br/>
-B.S. Elementary Education
-<br/>Southeastern University
-<br/>Music Minor
 
 <h2> 🤳 Connect with me:</h2>
 
-[<img align="left" alt="JoshMadakor | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
+[<img align="left" alt="MarthaSosa | LinkedIn" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/linkedin.svg" />][linkedin]
 </b>
 </b>
 
 [linkedin]: [https://www.linkedin.com/in/martha-vasquez-sosa-b0b28510b/](https://www.linkedin.com/in/martha-vasquez-sosa/)
 
 <!--
-**joshmadakor1/joshmadakor1** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+**marthajsosa/marthajsosa** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
 Here are some ideas to get you started:
 
