@@ -21,9 +21,6 @@
 ●	ISC² Systems Security Certified Practitioner (SSCP)
 ●	CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
 
-- ISC² Systems Security Certified Practitioner (SSCP)
-- CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
-
 
 <h2>Technical Proficiencies</h2>
 CrowdStrike SOAR Automation | Process Documentation & Technical Writing | Security Operations Automation | Azure Sentinel | Active Directory | Windows Server | Virtualization (Oracle VirtualBox) | Coding/Web Development | 
