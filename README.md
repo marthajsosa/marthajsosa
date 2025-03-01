@@ -19,7 +19,7 @@ https://github.com/marthajsosa/CrowdStrike-Queries
 - Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
 
 <h2>Certifications:</h2>
-●	ISC² Systems Security Certified Practitioner (SSCP)
+●	ISC² Systems Security Certified Practitioner (SSCP) <br/>
 ●	CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
 
 
