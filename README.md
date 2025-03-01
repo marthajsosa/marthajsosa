@@ -1,6 +1,7 @@
 <h1>Hi, I'm Martha! <br/>Cybersecurity | Educator | Creator</h1>
 
 <h2>👨‍💻 CrowdStrike Queries:</h2>
+https://github.com/marthajsosa/CrowdStrike-Queries
 
 <h2>👨‍💻 CrowdStrike Workflows:</h2>
 
