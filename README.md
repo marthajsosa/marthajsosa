@@ -15,9 +15,6 @@ https://github.com/marthajsosa/CrowdStrike-Queries
 - [Project Management](https://github.com/marthajsosa/projectmanagment)
 - [Simple Guessing Game in Python](https://replit.com/@CobbieJohn/EnchantingStickyStatistic)
 
-<h2>Language Experience:</h2>
-- Python | Java | SQL | KQL | Splunk (SPL) | Powershell | Linux | HTML
-
 <h2>Certifications:</h2>
 ●	ISC² Systems Security Certified Practitioner (SSCP) <br/>
 ●	CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
