@@ -3,7 +3,7 @@
 <h2>👨‍💻 CrowdStrike Queries:</h2>
 https://github.com/marthajsosa/CrowdStrike-Queries
 
-<h2>👨‍💻 CrowdStrike Workflows:</h2>
+<h2>👨‍💻 CrowdStrike Dashboards:</h2>
 
 <h2>👨‍💻 Personal Projects:</h2>
 
