@@ -1,1 +1,811 @@
+name: InvestigateHost
+updateFrequency: never
+timeSelector: {}
+sharedTimeInterval:
+  enabled: true
+  isLive: false
+  start: 7d
+widgets:
+  170cbd50-0a67-42c3-8f70-403946ce0cc4:
+    x: 0
+    y: 0
+    description: 'Provides the following detection details: Filename, Scenario, Description,
+      Severity, Detect count, True positives, False positives Ignored, Unresolved,
+      Status, Computer name, Username'
+    height: 3
+    queryString: |-
+      #repo=detections ((ExternalApiType=Event_UserActivityAuditEvent Attributes.product="epp" OperationName=detection_update) OR (ExternalApiType=Event_EppDetectionSummaryEvent)) cid="*"
+          | rename([[Hostname, ComputerName]])
+          | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+          | groupBy([ComputerName])
+    end: now
+    start: 7d
+    width: 1
+    options:
+      default: {}
+    visualization: single-value
+    title: No. of Detections
+    isLive: false
+    type: query
+  3e1c24cd-f43f-4150-b9b6-0d13e94477cc:
+    x: 4
+    y: 51
+    description: 'Provides the following details related to Admin Tools: Time, Username,
+      Parent process ID, PID, Process ID, Filename, Command line'
+    height: 7
+    queryString: |
+      #repo=base_sensor cid="*" | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | commandLine := rename(CommandLine) | commandLine =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+      | match("falcon/investigate/recon_apps.csv", field=FileName, include=[FileName])
+      | filename := rename(FileName)
+      | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+      | !in(filename, values=[NONE], ignoreCase=true)
+      | !in(commandLine, values=[NONE], ignoreCase=true)
+      | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds)
+      | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp)
+      | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp)
+      | ProcessStartTime := parseTimestamp(field=ProcessStartTime, format=seconds)
+      | processStartTime := formatTime("%FT%TZ", field=ProcessStartTime)
+      | rename([["ComputerName", "computerName"], ["UserName", "username"]])
+      | table([@timestamp, processStartTime, computerName, username,filename, commandLine], limit=20000)
+      | sort(processStartTime, order=desc, limit=20000)
+    end: now
+    start: 1d
+    width: 8
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Admin Tools
+    isLive: false
+    type: query
+  16ba077c-6c26-43a3-b0db-8c0d35ccaeaa:
+    x: 0
+    y: 20
+    description: 'Provides the following details related to process execution: Time,
+      Computer name, Username, Filename, PID, Process ID, Command line, MD5, Parent
+      filename, Parent PID, Parent process ID, Parent command line'
+    height: 7
+    queryString: |
+      defineTable({
+        #repo=base_sensor cid="*"
+        | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+        | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+        | rename([[CommandLine, commandLine], [FileName, filename], [UserName, username], [TargetProcessId, childTargetProcessId], [ComputerName, computerName], [RawProcessId, rawProcessId], [MD5HashData, md5HashData]])
+        | drop(TargetProcessId)
+        | rename([[ParentProcessId, targetProcessId]])
+        | commandLine =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+        | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+        | !in(filename, values=[NONE], ignoreCase=true)
+        | !in(commandLine, values=[NONE], ignoreCase=true)
+        | !in(filename, values=[NONE], ignoreCase=true)
+      }, include=[@timestamp, ContextTimeStamp,  computerName, username, filename, rawProcessId, childTargetProcessId, commandLine, md5HashData, targetProcessId, aid, cid], name="subsearch_pr2")
+      | defineTable({
+        #repo=base_sensor cid="*"
+        | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+        | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+        | match(file="subsearch_pr2", field=TargetProcessId, column=targetProcessId, include=[], strict=true)
+        | groupBy([TargetProcessId, aid], function=collect([FileName, CommandLine, RawProcessId]), limit=max)
+        | rename([[TargetProcessId, targetProcessId], [FileName, parentFileName], [CommandLine, parentCommandLine], [RawProcessId, parentRawProcessId]])
+      }, include=[targetProcessId, aid, parentFileName, parentCommandLine, parentRawProcessId], name="subsearch_parent-pr2")
+      | readfile(file="subsearch_pr2", include=[@timestamp, ContextTimeStamp,  computerName, username, filename, rawProcessId, childTargetProcessId, commandLine, md5HashData, targetProcessId, aid, cid]) | match(file="subsearch_parent-pr2", field=[targetProcessId, aid], include=[parentFileName, parentCommandLine, parentRawProcessId], strict=false) | table([@timestamp, computerName, username, filename, commandLine, rawProcessId, childTargetProcessId, md5HashData, parentFileName, parentRawProcessId, targetProcessId, parentCommandLine, aid, cid], limit=20000) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | default(field=[username, md5HashData, parentFileName, parentRawProcessId, parentCommandLine], value="--", replaceEmpty=true) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | drop([ContextTimeStamp]) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 8
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Process Execution
+    isLive: false
+    type: query
+  0fd37911-daaf-4d31-8e6b-4936e8ac1ed9:
+    x: 0
+    y: 5
+    description: "Provides the following BIOS details: AID, Computer name, BIOS manufacturer,\
+      \ BIOS release date, Prevalence, Manufacturer verified, BIOS ID, BIOS version,\
+      \ BIOS image hash\n\n\t\nHash type"
+    height: 3
+    queryString: |
+      #repo=base_sensor cid="*" | in(#event_simpleName, values=[AgentOnline, FirmwareImageAnalyzed, FirmwareImageCheck]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | table([ComputerName, BiosManufacturer, BiosReleaseDate, BiosVersion, SystemProductName, SystemSerialNumber], limit=20000)
+      | sort(ComputerName, order=desc, limit=20000)
+    end: now
+    start: 1d
+    width: 7
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: BIOS Activity
+    isLive: false
+    type: query
+  f80ac22c-5276-48ea-bde3-d3f92eb1e645:
+    x: 8
+    y: 14
+    description: 'Provides the following details related to running services: Time,
+      Computer name, Username, PID, Process ID, Filename, Command line, SHA256, AID'
+    height: 6
+    queryString: |-
+      #repo=base_sensor cid="*"
+      | in(#event_simpleName, values=[EndOfProcess, ProcessRollup2, ServiceStarted])
+      |in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | timeChart(span=1h, function=count(), series=FileName, limit=5)
+    end: now
+    start: 1d
+    width: 4
+    options:
+      connect-points: false
+      imputation: none
+    visualization: time-chart
+    title: Running Services Top 5
+    isLive: false
+    type: query
+  61ccaed2-0395-4f6f-94c6-1f2915b8738f:
+    x: 2
+    y: 79
+    height: 3
+    queryString: |
+      #repo=base_sensor #event_simpleName=ScheduledTaskRegistered cid="*" | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | regex("<Triggers>.*?<(?<trigger>[^\\s]+)>", field=TaskXml, strict=false) | groupBy([aid, RpcClientProcessId, cid], function=[collect([TaskAuthor, ComputerName, TaskName, TaskExecCommand, trigger, TaskExecArguments, UserName]), selectLast([@timestamp, ContextTimeStamp])], limit=max) | join({
+        #repo=base_sensor #event_simpleName=ProcessRollup2 cid="*"
+        | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+        | join({
+            #repo=base_sensor #event_simpleName=ScheduledTaskRegistered cid="*"
+            | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+        }, field=[TargetProcessId], key=[RpcClientProcessId], limit=200000)
+        | RpcClientProcessId := rename(TargetProcessId)
+      }, field=[aid, RpcClientProcessId], include=[FileName], mode=left) | rename([[TaskName, taskName], [TaskExecCommand, taskExecCommand], [TaskExecArguments, taskExecArguments], [TaskAuthor, taskAuthor], [RpcClientProcessId, rpcClientProcessId], [FileName, filename], [UserName, username], [ComputerName, computerName]]) | table([@timestamp, timestamp_UTC_readable, ContextTimeStamp, contextTimestamp, taskName, trigger, taskExecCommand, taskExecArguments, taskAuthor, rpcClientProcessId, filename, username, computerName, aid, cid], limit=20000) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | drop(ContextTimeStamp) | default(field=[taskExecArguments, rpcClientProcessId, filename, username], value="--", replaceEmpty=true) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 10
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Scheduled Tasks Registered
+    isLive: false
+    type: query
+  9ef3ac0a-053f-4e0f-ac86-9ec34bbfdbe0:
+    x: 7
+    y: 5
+    description: 'Provides the following details related to user logon activity: Username,
+      Log on domain, Log on type, Log on time, Log off time, Duration'
+    height: 9
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[UserLogon, UserLogoff])
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | groupBy([username, LogonType, aid, LogonTime, "Agent IP"], function=[selectLast([ComputerName, UserIsAdmin, LogonDomain, LogonServer, LogoffTime, @timestamp, duration])], limit=1000000)
+      | match("falcon/investigate/LogonType.csv", field=LogonType, column=LogonType_decimal, include=[LogonType], strict=false)
+      | worldMap(ip="Agent IP")
+    visualization: world-map
+    end: now
+    start: 1d
+    width: 5
+    title: User Logon Activity Map
+    isLive: false
+    type: query
+  69789d51-4b65-4e25-8285-f1d329085b54:
+    x: 8
+    y: 20
+    description: 'Provides the following details related to process execution: Time,
+      Computer name, Username, Filename, PID, Process ID, Command line, MD5, Parent
+      filename, Parent PID, Parent process ID, Parent command line'
+    height: 7
+    queryString: |-
+      #repo=base_sensor cid="*"
+      | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | groupBy([FileName], limit=5)
+    visualization: bar-chart
+    end: now
+    start: 1d
+    width: 4
+    title: Process Execution by File Name
+    isLive: false
+    type: query
+  baf4bd41-9255-4464-bb08-05adc6974c18:
+    x: 0
+    y: 31
+    description: 'Provides the following details related to PowerShell activity on
+      the host: Time, Computer name, Username, Parent process ID, Process ID, PID,
+      Score, Exec, Dwnld, Encode, ExecPol, NonI, NoProf, Hidden, Domain, VM, Prxy,
+      obf1, obf2, Command line'
+    height: 6
+    queryString: |
+      #repo=base_sensor FileName="powershell*" event_platform="Win" cid="*" | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | timeChart(FileName)
+    end: now
+    start: 1d
+    width: 12
+    options:
+      legendPosition: right
+      series: {}
+      gradient: false
+      interpolation: step-after
+      showOthers: true
+      legendLabelOverflow: truncate
+      legend: true
+      showDataPoints: false
+      connect-points: false
+      stacking: normal
+      yAxisScale: linear
+      plotType: area
+      maxSeriesCount: 11
+      regression: false
+      imputation: none
+    visualization: time-chart
+    title: PowerShell Activities
+    isLive: false
+    type: query
+  8b7449c5-dca3-490f-8a94-bddbfaebff74:
+    x: 0
+    y: 62
+    description: 'Provides the following details related to external network connections:
+      Country, Remote port, Count'
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=NetworkConnectIP4 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | !cidr(RemoteAddressIP4, subnet=["127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]) | iplocation(RemoteAddressIP4) | RemoteAddressIP4.country!="" | groupBy([RemoteAddressIP4.country, RemotePort], function=[count(as=count), collect([cid, aid])], limit=max) | rename([["RemotePort", "remotePort"], ["RemoteAddressIP4.country", "country"]]) | table([country, remotePort, count], limit=20000) | sort(count, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 2
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: External Network Connections
+    isLive: false
+    type: query
+  46e56be9-f8fb-4c30-8d36-1c8520820af9:
+    x: 0
+    y: 51
+    description: 'Provides the following details related to executable activity: Time,
+      Computer name, Filename, File path, Action'
+    height: 7
+    queryString: |
+      #repo=base_sensor cid="*" | in(#event_simpleName, values=[ExecutableDeleted, NewExecutableRenamed, NewExecutableWritten, PeFileWritten]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | filename := rename(FileName) | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | #event_simpleName match {
+          "ExecutableDeleted" => action := "Deleted";
+          "NewExecutableRenamed" => action := "Renamed";
+          "NewExecutableWritten" => action := "Added";
+          "PeFileWritten" => action := "Added";
+      } | table([@timestamp, computerName, filename, filePath, action], limit=20000) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 4
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Executable Activity
+    isLive: false
+    type: query
+  7a7f6f5b-1310-4a97-ad80-94ed2fa5ade0:
+    x: 2
+    y: 62
+    description: 'Provides the following details: Time, MAC, Local IP, External IP,
+      Interface'
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=LocalIpAddressIP4 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | case {
+          event_platform = "Win" AND name = *V1
+              | LocalAddressIP4 := splitString(LocalAddressIP4, by="\\.")
+              | LocalAddressIP4 := format("%s.%s.%s.%s", field=[LocalAddressIP4[3], LocalAddressIP4[2], LocalAddressIP4[1], LocalAddressIP4[0]]);
+          *;
+      } | groupBy([PhysicalAddress, aid, LocalAddressIP4, aip, cid], function=[max(@timestamp), collect([InterfaceAlias])], limit=max) | time := formatTime("%FT%TZ", field=_max) | rename([["InterfaceAlias", "interfaceAlias"], ["LocalAddressIP4", "localAddressIp4"]]) | table([time, localAddressIp4, aip, interfaceAlias, aid, cid], limit=20000) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 4
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Local and External IPs
+    isLive: false
+    type: query
+  ec25ca9f-fc3a-4103-b7d1-08371c406271:
+    x: 1
+    y: 0
+    description: 'Provides the following detection details: Filename, Scenario, Description,
+      Severity, Detect count, True positives, False positives Ignored, Unresolved,
+      Status, Computer name, Username'
+    height: 3
+    queryString: |
+      defineTable(query={
+          #repo=detections ((ExternalApiType=Event_UserActivityAuditEvent Attributes.product="epp" OperationName=detection_update) OR (ExternalApiType=Event_EppDetectionSummaryEvent)) cid="*"
+          | rename([[Attributes.composite_id, CompositeId], [Attributes.update_status, status], [Attributes.resolution, Resolution], [AgentIdString, aid], [Hostname, ComputerName]])
+          | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+          | groupBy([CompositeId], limit=max, function=[
+              {ExternalApiType=Event_UserActivityAuditEvent | selectLast([status, Resolution])},
+              {ExternalApiType=Event_EppDetectionSummaryEvent | groupBy([CompositeId, FileName, Description], function=selectLast([@timestamp, Name, ComputerName, SeverityName, aid, cid, ParentProcessId, ProcessId, UserName, MD5String, SHA256String]), limit=max)}
+          ])
+          | case {
+              UserName = "N/A"
+                  | UserName := "--";
+              *;
+          }
+          | FileName=*
+      }, include=[CompositeId, FileName, Description, status, Resolution, @timestamp, Name, ComputerName, SeverityName, aid, cid, ParentProcessId, ProcessId, UserName, MD5String, SHA256String], name="subsearch_detection")
+      | readfile(subsearch_detection, include=[@timestamp, FileName, Name, Description, status, Resolution, CompositeId, SeverityName, ComputerName, UserName, aid, cid]) | Resolution match {
+          *true_positive* => tp := 1;
+          *false_positive* => fp := 1;
+          *ignored* => ignored := 1;
+          * => *;
+      } | groupBy([FileName, Name, Description, aid, cid], function=[count(CompositeId, as=detectCount, distinct=true), count(tp, as=truePositives), count(fp, as=falsePositives), count(ignored, as=ignored), collect([@timestamp, SeverityName, ComputerName, UserName]), min(@timestamp, as=fStart), max(@timestamp, as=fEnd), selectLast(status)], limit=max) | unresolved := (detectCount - truePositives - falsePositives - ignored) | rename([["Description", "detectDescription"], ["FileName", "filename"], ["ComputerName", "computerName"], ["Name", "detectName"], ["SeverityName", "severityName"], ["UserName", "username"]]) | table([@timestamp, filename, severityName, detectName, detectDescription, detectCount, truePositives, falsePositives, ignored, unresolved, status, computerName, username], limit=20000) | sort(severityName, order=desc)
+    end: now
+    start: 7d
+    width: 11
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Detection History
+    isLive: false
+    type: query
+  3c7e70ab-5986-4875-9507-b456d2ed931f:
+    x: 0
+    y: 44
+    description: 'Provides the following details related to Command History: Time,
+      Application name, Command count, Command history'
+    height: 7
+    queryString: |
+      #repo=base_sensor #event_simpleName=CommandHistory cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | CommandHistory := splitString(CommandHistory, by="¶")
+      | commandHistory := concatArray(CommandHistory, separator="\n")
+      | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp)
+      | rename([["ApplicationName", "applicationName"], ["CommandCount", "commandCount"]])
+      | table([@timestamp, timestamp_UTC_readable, applicationName, commandCount, commandHistory, aid, cid], limit=20000)
+      | sort(@timestamp, order=desc, limit=20000)
+    visualization: bar-chart
+    end: now
+    start: 1d
+    width: 12
+    title: Command History Activities
+    isLive: false
+    type: query
+  4b1c005d-0fe8-4e59-be22-4be4fb2906c7:
+    x: 0
+    y: 79
+    height: 6
+    queryString: |-
+      #repo=base_sensor #event_simpleName=ScheduledTaskRegistered cid="*" | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | groupby(ComputerName)
+    end: now
+    start: 1d
+    width: 2
+    options:
+      default: {}
+    visualization: single-value
+    title: No. of Scheduled Tasks
+    isLive: false
+    type: query
+  c74b559d-7c01-4d19-888d-82898226479a:
+    x: 0
+    y: 27
+    description: 'Provides the following details related to PowerShell activity on
+      the host: Time, Computer name, Username, Parent process ID, Process ID, PID,
+      Score, Exec, Dwnld, Encode, ExecPol, NonI, NoProf, Hidden, Domain, VM, Prxy,
+      obf1, obf2, Command line'
+    height: 4
+    queryString: |
+      #event_simpleName=CommandHistory
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | table([@timestamp, CommandHistory])
+      | sort(@timestamp, order=desc)
+    end: now
+    start: 1d
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: PowerShell Scripts
+    isLive: false
+    type: query
+  3929f3ae-e229-4941-87f4-c0c692e3041f:
+    x: 6
+    y: 75
+    description: 'Provides the following details related to written file activities:
+      Time, Target filename, Context process ID, Computer name, Filename'
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=NewScriptWritten cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | filename := rename(FileName) | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | rename([["ComputerName", "computerName"], ["ContextProcessId", "contextProcessId"], ["TargetFileName", "targetFilename"]]) | table([@timestamp, timestamp_UTC_readable, contextTimestamp, computerName, targetFilename, contextProcessId, filename, aid, cid], limit=20000) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 6
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Scripts Written
+    isLive: false
+    type: query
+  fe13624d-7eaf-4ce4-99c3-0b5549dfad89:
+    x: 0
+    y: 66
+    height: 9
+    queryString: |
+      #repo=base_sensor #event_simpleName=FirewallSetRule cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | regex("App=(?<app>(.*?))\|", field=FirewallRule, strict=false) | regex("Action=(?<action>(.*?))\|", field=FirewallRule, strict=false) | regex("Active=(?<active>(.*?))\|", field=FirewallRule, strict=false) | regex("Protocol=(?<protocol>(.*?))\|", field=FirewallRule, strict=false) | regex("Profile=(?<profile>(.*?))\|", field=FirewallRule, strict=false) | regex("Dir=(?<direction>(.*?))\|", field=FirewallRule, strict=false) | regex("LPort=(?<lPort>(.*?))\|", field=FirewallRule, strict=false) | regex("RPort=(?<rPort>(.*?))\|", field=FirewallRule, strict=false) | regex("Desc=(?<description>(.*?))\|", field=FirewallRule, strict=false) | regex("Name=(?<firewallName>(.*?))\|", field=FirewallRule, strict=false) | regex("(?<filename>[^\\\\/]+)$", field=app, strict=false) | protocol match {
+          1 => protocol := "ICMP";
+          6 => protocol := "TCP";
+          17 => protocol := "UDP";
+          58 => protocol := "IPv6-ICMP";
+          * => *;
+      } | case {
+          test(length(ContextTimeStamp) == 18)
+              | ContextTimeStamp := ContextTimeStamp/10000000-11644473600
+              | round(ContextTimeStamp);
+          *;
+      } | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | rename([["ComputerName", "computerName"], ["RpcClientProcessId", "rpcClientProcessId"]]) | table([@timestamp, timestamp_UTC_readable, contextTimestamp, rpcClientProcessId, firewallName, protocol, computerName, direction, app, profile, aid, cid], limit=20000) | default(field=[rpcClientProcessId, firewallName, protocol, computerName, direction, app, profile], value="--", replaceEmpty=true) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Firewall Rules Set
+    isLive: false
+    type: query
+  7219a2e5-857c-44fe-9192-c4eabc8c18c1:
+    x: 0
+    y: 3
+    description: 'Provides the following details: Computer name, Real time response,
+      MAC, Local IP, AIP, Product type, Version, Manufacture, Model, Domain, Site
+      name, Agent version, AID'
+    height: 2
+    queryString: |
+      "#event_simpleName" = SensorHeartbeat OR (#data_source_name=aidmaster OR #data_source_name=managedassets-ds OR #data_source_name=aid-policy) cid="*"
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | AgentIP := rename("Agent IP")
+      | aip := if((AgentIP != ""), then=AgentIP, else=aip)
+      | groupBy(ComputerName, function=[selectLast([MAC, LocalAddressIP4, aip, ComputerType, Version, SystemManufacturer, ProductType, SystemProductName, MachineDomain, SiteName, AgentVersion, cid, ComputerName, remote_response_applied, rtr_state, Time])], limit=max)
+      | match("falcon/investigate/ProductType.csv", field=ProductType, strict=false) | case {
+          rtr_state = "enabled" OR rtr_state = ""
+            | remote_response_applied = "true"
+            | rtr := "Connect to host";
+          *
+              | rtr := "--";
+      } | rename([["AgentVersion", "agentVersion"], ["ComputerName", "computerName"], ["ComputerType", "computerType"], ["LocalAddressIP4", "localAddressIp4"], ["MAC", "mac"], ["MachineDomain", "machineDomain"], ["SiteName", "siteName"], ["SystemManufacturer", "systemManufacturer"], ["SystemProductName", "systemProductName"], ["Time", "time"], ["Version", "version"]]) | table([computerName, rtr, mac, localAddressIp4, aip, computerType, version, systemManufacturer, systemProductName, machineDomain, siteName, agentVersion, time, aid, cid], limit=20000) | sort(computerName, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Host Info
+    isLive: false
+    type: query
+  c537c366-5f44-43ec-b543-32d9bdb01de6:
+    x: 6
+    y: 62
+    description: 'Provides the following details related to network listening activities:
+      Time, Computer name, Local port, Parent process ID, PID, Process ID, Filename,
+      Command line, MD5'
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=NetworkListenIP4 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | rename([[ComputerName, computerName], [LocalPort, localPort]]) | localPort=* | !in(localPort, values=[NONE]) | join({
+          #repo=base_sensor cid="*"
+          | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+          | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+          | join({
+              #repo=base_sensor #event_simpleName=NetworkListenIP4 cid="*"
+              | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+              | rename([[LocalPort, localPort]])
+              | localPort=*
+              | !in(localPort, values=[NONE])
+          }, field=TargetProcessId, key=ContextProcessId, limit=200000)
+      }, field=[aid, ContextProcessId], key=[aid, TargetProcessId], include=[FileName, CommandLine, MD5HashData, ParentProcessId, RawProcessId], mode=left) | rename([[ContextProcessId, targetProcessId], [ParentProcessId, parentProcessId], [FileName, filename], [RawProcessId, rawProcessId], [CommandLine, commandLine], [MD5HashData, md5HashData]]) | !in(commandLine, values=[NONE], ignoreCase=true) | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | table([ContextTimeStamp, contextTimestamp, computerName, localPort, parentProcessId, rawProcessId, targetProcessId, filename, commandLine, md5HashData, aid, cid], limit=20000) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | drop(ContextTimeStamp) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | default(field=[parentProcessId, rawProcessId, filename, commandLine, md5HashData], value="--", replaceEmpty=true) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 3
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Network Listening
+    isLive: false
+    type: query
+  619811f7-d559-4fe1-8be9-192a3a954803:
+    x: 6
+    y: 85
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=*FileWritten* IsOnRemovableDisk=1 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | case {
+        Size >= 1099510000000
+          | Size := Size/1099510000000
+          | Size := format("%.2f", field=Size)
+          | size := format(format="%sTB", field=Size);
+        Size >= 1073742000
+          | Size := Size/1073742000
+          | Size := format("%.2f", field=Size)
+          | size := format(format="%sGB", field=Size);
+        Size >= 1048576
+          | Size := Size/1048576
+          | Size := format("%.2f", field=Size)
+          | size := format(format="%sMB", field=Size);
+        Size >= 1024
+          | Size := Size/1024
+          | Size := format("%.2f", field=Size)
+          | size := format(format="%sKB", field=Size);
+        *
+          | size := format(format="%sB", field=Size);
+      } | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | rename([["ComputerName", "computerName"], ["FileName", "filename"], ["TargetFileName", "targetFilename"], ["UserName", "username"]]) | table([@timestamp, timestamp_UTC_readable, contextTimestamp, computerName, filename, targetFilename, size, username, aid, cid, eventSimpleName], limit=20000) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | default(field=username, value="--", replaceEmpty=true) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 6
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Files Written to Removable Media
+    isLive: false
+    type: query
+  1b716d0c-48cf-424b-b32c-4353a6905285:
+    x: 0
+    y: 8
+    description: 'Provides the following details related to user logon activity: Username,
+      Log on domain, Log on type, Log on time, Log off time, Duration'
+    height: 6
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[UserLogon, UserLogoff])
+      | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | username := rename(UserName)
+      | LogonDomain := upper(LogonDomain)
+      | duration := LogoffTime - LogonTime
+      | duration := round(duration)
+      | duration := formatDuration(field=duration, from=s)
+      | groupBy([username, LogonType, aid, LogonTime, cid], function=[selectLast([ComputerName, UserIsAdmin, LogonDomain, LogonServer, LogoffTime, @timestamp, duration])], limit=max)
+      | match("falcon/investigate/LogonType.csv", field=LogonType, column=LogonType_decimal, include=[LogonType], strict=false)
+      | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp)
+      | logonTime := parseTimestamp(field=LogonTime, format=seconds)
+      | logonTime := formatTime("%FT%TZ", field=logonTime)
+      | logoffTime := parseTimestamp(field=LogoffTime, format=seconds)
+      | logoffTime := formatTime("%FT%TZ", field=logoffTime)
+      | rename([["LogonDomain", "logonDomain"], ["LogonType", "logonType"]])
+      | table([@timestamp, username, logonDomain, logonType, logonTime, logoffTime, duration, aid, cid], limit=20000)
+      | default(field=[logonTime, logoffTime, duration], value="--", replaceEmpty=true) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 7
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: User Logon Activity
+    isLive: false
+    type: query
+  d264d523-9af6-431e-b18b-8ed2201094d7:
+    x: 0
+    y: 14
+    description: 'Provides the following details related to running services: Time,
+      Computer name, Username, PID, Process ID, Filename, Command line, SHA256, AID'
+    height: 6
+    queryString: |
+      #repo=base_sensor cid="*"
+      | in(#event_simpleName, values=[EndOfProcess, ProcessRollup2, ServiceStarted])
+      |in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | groupBy([TargetProcessId, aid, cid], function=[collect([#event_simpleName, UserName, CommandLine, SHA256HashData, FileName, RawProcessId, ComputerName]), collect([ContextTimeStamp, @timestamp], multival=false)], limit=max)
+      | #event_simpleName = /^(?!(?s).*EndOfProcess)(?s).*ServiceStarted(?s).*$/
+      | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds)
+      | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp)
+      | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp)
+      | rename([["CommandLine", "commandLine"], ["ComputerName", "computerName"], ["FileName", "filename"], ["RawProcessId", "rawProcessId"], ["SHA256HashData", "sha256HashData"], ["TargetProcessId", "targetProcessId"], ["UserName", "username"]])
+      | table([@timestamp, computerName, username, filename, commandLine, rawProcessId, targetProcessId, sha256HashData, aid, cid], limit=20000)
+      | default(field=[username, rawProcessId, sha256HashData], value="--", replaceEmpty=true) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 1d
+    width: 8
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Running Services
+    isLive: false
+    type: query
+  bcfc3ce2-f636-4300-a15f-989106b80a8d:
+    x: 0
+    y: 85
+    description: 'Provides the following details related to DNS requests from MSTSC:
+      Time, Computer name, Username, Parent process ID, PID, Process ID, Filename,
+      Command line, Attributes'
+    height: 4
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2]) | event_platform=Win FileName=mstsc.exe | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | join({
+          #repo=base_sensor cid="*"
+          | in(#event_simpleName, values=[DnsRequest, NetworkConnectIP4])
+          | event_platform=Win
+          | join({
+              #repo=base_sensor cid="*"
+              | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+              | event_platform=Win FileName=mstsc.exe
+              | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+          }, field=ContextProcessId, key=TargetProcessId, limit=200000)
+          | rename([[RemoteAddressIP4, remoteAddressIp4], [ContextProcessId, TargetProcessId]])
+          | !in(remoteAddressIp4, values=["10.*", "192.168.*", "127.0.0.1"])
+          | !in(remoteAddressIp4, values=[NONE])
+          | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      }, field=[aid, TargetProcessId], include=[LocalAddressIP4, remoteAddressIp4, LocalPort, RemotePort, DomainName]) | default(field=[DomainName, LocalAddressIP4, LocalPort, remoteAddressIp4, RemotePort], value="null", replaceEmpty=true) | attributes := format("Local IP: %s;Local Port: %s;Destination IP: %s;Remote Port: %s;Domain Looked Up: %s", field=[LocalAddressIP4, LocalPort, remoteAddressIp4, RemotePort, DomainName]) | rename([[ComputerName, computerName], [LocalPort, localPort], [ParentProcessId, parentProcessId], [FileName, filename], [RawProcessId, rawProcessId], [CommandLine, commandLine], [TargetProcessId, targetProcessId], [UserName, username]]) | table([@timestamp, timestamp_UTC_readable, ProcessStartTime, processStartTime, ContextTimeStamp, contextTimestamp, computerName, username, parentProcessId, rawProcessId, targetProcessId, filename, commandLine, localPort, attributes, aid, cid], limit=20000) | attributes := splitString(attributes, by=";") | array:filter(array="attributes[]", function={ attr!=*null }, var="attr") | concatArray("attributes", as=attributes, separator="\n") | ProcessStartTime := parseTimestamp(field=ProcessStartTime, format=seconds, addErrors=false) | processStartTime := formatTime("%FT%TZ", field=ProcessStartTime) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | default(field=[username], value="--", replaceEmpty=true) | drop([ProcessStartTime, ContextTimeStamp]) | sort(processStartTime, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 6
+    options:
+      columns:
+      - fieldName: '@timestamp'
+        format: datetime
+        type: field
+        width: 200
+      - groupByPrefix: false
+        header: Field List
+        type: fieldList
+      newestAtBottom: true
+      showOnlyFirstLine: false
+    visualization: list-view
+    title: Anomalous external connectivity / DNS requests from MSTSC process
+    isLive: false
+    type: query
+  2b831fd9-e419-4c64-916a-7af2156a818d:
+    x: 0
+    y: 58
+    description: 'Provides the following details related to network connections: Command
+      line, Computer name, Filename, Local port, MD5, Parent process ID, PID, Destination
+      IP, Remote port, Process ID, Time'
+    height: 4
+    queryString: |
+      #repo=base_sensor #event_simpleName=NetworkConnectIP4 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | groupBy([ComputerName])
+    end: now
+    start: 1d
+    width: 2
+    options:
+      default: {}
+    visualization: single-value
+    title: No. of Network Connections
+    isLive: false
+    type: query
+  21a055f9-cf68-4b5a-ada1-c9edc5ddf8c5:
+    x: 9
+    y: 62
+    description: 'Provides the following details related to DNS Requests: Command
+      line, Computer name, Domain, Filename, Parent process ID, PID, SHA256, Process
+      ID, Time, Username'
+    height: 4
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[DnsRequest, SuspiciousDnsRequest]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | rename([[DomainName, domainName], [ComputerName, computerName], [LocalPort, localPort], [RemotePort, remotePort]]) | domainName =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | domainName =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(domainName, values=[NONE], ignoreCase=true) | groupBy([aid, ContextTimeStamp, @timestamp, domainName, cid], function=[selectLast([ContextProcessId, computerName])], limit=max) | join({
+          #repo=base_sensor cid="*"
+          | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+          | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true))
+          | join({
+              #repo=base_sensor cid="*"
+              | in(#event_simpleName, values=[DnsRequest, SuspiciousDnsRequest])
+              | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+              | rename([[DomainName, domainName]])
+              | domainName =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+              | domainName =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true)
+              | !in(domainName, values=[NONE], ignoreCase=true)
+          }, field=TargetProcessId, key=ContextProcessId, limit=200000)
+          | groupBy([TargetProcessId, aid, SHA256HashData], function=[collect([FileName, FilePath, UserName, CommandLine, ParentProcessId, RawProcessId])], limit=max)
+      }, field=[aid, ContextProcessId], key=[aid, TargetProcessId], include=[FileName, FilePath, UserName, CommandLine, ParentProcessId, RawProcessId, SHA256HashData], mode=left) | rename([[ContextProcessId, targetProcessId], [ParentProcessId, parentProcessId], [FileName, filename], [RawProcessId, rawProcessId], [CommandLine, commandLine], [SHA256HashData, sha256HashData], [UserName, username]]) | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | table([ContextTimeStamp, contextTimestamp, computerName, domainName, username, parentProcessId, rawProcessId, targetProcessId, filename, commandLine, sha256HashData, aid, cid], limit=20000) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | drop(ContextTimeStamp) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | default(field=[username, filename], value="--", replaceEmpty=true) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 3
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: DNS Requests
+    isLive: false
+    type: query
+  498c5ea5-d813-4548-96cd-35a46e1b411d:
+    x: 0
+    y: 75
+    description: 'Provides the following details related to rar or zip files: Time,
+      Target filename, Context process ID, Computer name, Filename'
+    height: 4
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[RarFileWritten, SevenZipFileWritten, ZipFileWritten]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | filename =~ wildcard(*, ignoreCase=true, includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | rename([["ComputerName", "computerName"], ["ContextProcessId", "contextProcessId"], ["TargetFileName", "targetFilename"]]) | table([@timestamp, timestamp_UTC_readable, contextTimestamp, targetFilename, contextProcessId, computerName, filename, aid, cid], limit=20000) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | sort(@timestamp, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 6
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Rar / zip file written
+    isLive: false
+    type: query
+  c5404c84-7c75-45c6-bb39-7222106c629b:
+    x: 2
+    y: 82
+    height: 3
+    queryString: |
+      #repo=base_sensor cid="*"  | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2]) | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | FileName="reg.exe" CommandLine="* add *" | ProcessStartTime := parseTimestamp(field=ProcessStartTime, format=seconds) | processStartTime := formatTime("%FT%TZ", field=ProcessStartTime) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | rename([["CommandLine", "commandLine"], ["ComputerName", "computerName"], ["FileName", "filename"], ["UserName", "username"]]) | table([@timestamp, timestamp_UTC_readable, processStartTime, contextTimestamp, computerName, username, filename, commandLine, aid, cid], limit=20000) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | default(field=username, value="--", replaceEmpty=true) | sort(processStartTime, order=desc, limit=20000)
+    end: now
+    start: 24h
+    width: 10
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Manual Registry Additions
+    isLive: false
+    type: query
+  b7b4ebd0-47a2-4cde-b5d6-7846dcecd192:
+    x: 0
+    y: 37
+    description: 'Provides the following details related to Command History: Time,
+      Application name, Command count, Command history'
+    height: 7
+    queryString: |
+      #repo=base_sensor #event_simpleName=CommandHistory cid="*" | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true)
+      | CommandHistory := splitString(CommandHistory, by="¶") | commandHistory := concatArray(CommandHistory, separator="\n") | rename([["CommandCount", "commandCount"]]) |table([commandCount, commandHistory,ApplicationName], limit=20000) | sort(timeStamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Command History
+    isLive: false
+    type: query
+  44d8da3c-568d-4597-a7ef-4a4fb77e0b4b:
+    x: 2
+    y: 58
+    description: 'Provides the following details related to network connections: Command
+      line, Computer name, Filename, Local port, MD5, Parent process ID, PID, Destination
+      IP, Remote port, Process ID, Time'
+    height: 4
+    queryString: |-
+      #repo=base_sensor #event_simpleName=NetworkConnectIP4 cid="*"  | in(ComputerName, values=[?{ComputerName="*"}], ignoreCase=true) | rename([[RemoteAddressIP4, remoteAddressIp4], [ComputerName, computerName], [LocalPort, localPort], [RemotePort, remotePort]]) | remoteAddressIp4=* remoteAddressIp4!="127.0.0.1" | !in(remoteAddressIp4, values=[NONE]) | !in(remoteAddressIp4, values=[NONE]) | join({
+          #repo=base_sensor cid="*"
+          | in(#event_simpleName, values=[ProcessRollup2, SyntheticProcessRollup2])
+          | in(ComputerName, values=["ComputerName=?{ComputerName=*}"], ignoreCase=true)
+          | join({
+              #repo=base_sensor #event_simpleName=NetworkConnectIP4 cid="*"
+              | in(ComputerName, values=["ComputerName=?{ComputerName=*}"], ignoreCase=true)
+              | rename([[RemoteAddressIP4, remoteAddressIp4]])
+              | remoteAddressIp4=* remoteAddressIp4!="127.0.0.1"
+              | !in(remoteAddressIp4, values=[NONE])
+              | !in(remoteAddressIp4, values=[NONE])
+          }, field=TargetProcessId, key=ContextProcessId, limit=200000)
+      }, field=ContextProcessId, key=TargetProcessId, include=[ParentProcessId, RawProcessId, FileName, MD5HashData, CommandLine], mode=left) | rename([[ContextProcessId, targetProcessId], [ParentProcessId, parentProcessId], [FileName, filename], [RawProcessId, rawProcessId], [CommandLine, commandLine], [MD5HashData, md5HashData]]) | filename =~ wildcard(*, ignoreCase=true,includeEverythingOnAsterisk=true) | !in(filename, values=[NONE], ignoreCase=true) | table([timestamp_UTC_readable, ContextTimeStamp, contextTimestamp, computerName, remoteAddressIp4, localPort, remotePort, filename, commandLine, aid, cid, rawProcessId, targetProcessId, md5HashData, parentProcessId], limit=20000) | default(field=[parentProcessId, rawProcessId, filename, commandLine, md5HashData], value="--", replaceEmpty=true) | timestamp_UTC_readable := formatTime("%FT%T%z", field=@timestamp) | ContextTimeStamp := parseTimestamp(field=ContextTimeStamp, format=seconds, addErrors=false) | contextTimestamp := formatTime("%FT%TZ", field=ContextTimeStamp) | drop(ContextTimeStamp) | sort(contextTimestamp, order=desc, limit=20000)
+    end: now
+    start: 7d
+    width: 10
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Network Connections Details
+    isLive: false
+    type: query
+$schema: https://schemas.humio.com/dashboard/v0.18.0
+parameters:
+  ComputerName:
+    label: ComputerName
+    order: 50
+    type: text
+    width: 1
 
