@@ -85,8 +85,20 @@ begin {
 \$zipData = '$Base64Zip'
 \$bytes = [Convert]::FromBase64String(\$zipData)
 \$outputPath = 'C:\\KAPE.zip'
+\$extractPath = 'C:\\KAPE'
+
+# Remove existing KAPE directory
+if (Test-Path \$extractPath) {
+    Remove-Item -Path \$extractPath -Recurse -Force
+}
+
+# Write the ZIP file
 [IO.File]::WriteAllBytes(\$outputPath, \$bytes)
-Expand-Archive -Path \$outputPath -DestinationPath 'C:\\KAPE' -Force
+
+# Expand forcibly
+Expand-Archive -Path \$outputPath -DestinationPath \$extractPath -Force
+
+# Clean up
 Remove-Item \$outputPath
 "@
 
@@ -102,6 +114,7 @@ process {
   }
   Invoke-FalconRtr @Param
 }
+
 ```
 
 Example: Clear stored credentials via scheduled task:
