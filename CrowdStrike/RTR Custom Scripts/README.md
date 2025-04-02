@@ -87,12 +87,17 @@ begin {
 \$outputPath = 'C:\\KAPE.zip'
 \$extractPath = 'C:\\KAPE'
 
-# Remove existing KAPE directory
+# Remove existing KAPE folder
 if (Test-Path \$extractPath) {
     Remove-Item -Path \$extractPath -Recurse -Force
 }
 
-# Write the ZIP file
+# Remove existing KAPE.zip file
+if (Test-Path \$outputPath) {
+    Remove-Item -Path \$outputPath -Force
+}
+
+# Write new ZIP file
 [IO.File]::WriteAllBytes(\$outputPath, \$bytes)
 
 # Expand forcibly
