@@ -45,7 +45,7 @@ Scripts are organized into the following types:
 
 ## 📌 Examples
 
-Example usage of a using uploading and extracting local KAPE file to host and extracting:
+Example usage of uploading and extracting local KAPE file to host and extracting:
 ```powershell
 #Requires -Version 5.1
 using module @{ModuleName='PSFalcon';ModuleVersion='2.2'}
