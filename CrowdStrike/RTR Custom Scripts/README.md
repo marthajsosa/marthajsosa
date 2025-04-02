@@ -45,9 +45,63 @@ Scripts are organized into the following types:
 
 ## 📌 Examples
 
-Example usage of a KAPE triage script:
+Example usage of a using uploading and extracting local KAPE file to host and extracting:
 ```powershell
-example
+#Requires -Version 5.1
+using module @{ModuleName='PSFalcon';ModuleVersion='2.2'}
+<#
+.SYNOPSIS
+Upload and extract a ZIP archive containing KAPE into the C:\ directory of target hosts using CrowdStrike RTR.
+
+.DESCRIPTION
+This script uploads a ZIP archive (e.g., KAPE.zip) and then extracts it into C:\ using a secondary process launched
+from within Real-time Response, avoiding timeout limitations.
+
+.PARAMETER ZipPath
+Path to the local ZIP file containing KAPE
+
+.PARAMETER HostId
+One or more host identifiers
+
+.NOTES
+Ensure the ZIP file is structured such that its contents extract cleanly into C:\KAPE or desired subfolder.
+
+#>
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory, Position=1)]
+  [ValidateScript({ Test-Path $_ })]
+  [string]$ZipPath,
+
+  [Parameter(Mandatory, Position=2)]
+  [ValidatePattern('^[a-fA-F0-9]{32}$')]
+  [string[]]$HostId
+)
+
+begin {
+  # Read the ZIP file and convert to base64
+  $Base64Zip = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($ZipPath))
+  $TempScript = @"
+\$zipData = '$Base64Zip'
+\$bytes = [Convert]::FromBase64String(\$zipData)
+\$outputPath = 'C:\\KAPE.zip'
+[IO.File]::WriteAllBytes(\$outputPath, \$bytes)
+Expand-Archive -Path \$outputPath -DestinationPath 'C:\\KAPE' -Force
+Remove-Item \$outputPath
+"@
+
+  # Encode the PowerShell script
+  $EncodedScript = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($TempScript))
+}
+
+process {
+  $Param = @{
+    Command  = 'runscript'
+    Argument = '-Raw=```Start-Process -FilePath powershell.exe -ArgumentList "-EncodedCommand ' + $EncodedScript + '"```'
+    HostId   = $HostId
+  }
+  Invoke-FalconRtr @Param
+}
 ```
 
 Example: Clear stored credentials via scheduled task:
