@@ -1,7 +1,8 @@
 <h1>Hi, I'm Martha! <br/>Cybersecurity | Educator | Creator</h1>
 
 <h2>👨‍💻 CrowdStrike Queries:</h2>
-https://github.com/marthajsosa/CrowdStrike-Queries
+
+- [Incident Response Playbooks](https://github.com/marthajsosa/Incident-Response-Playbooks/tree/main)
 
 <h2>👨‍💻 CrowdStrike Dashboards:</h2>
 https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards
