@@ -1,11 +1,11 @@
-<h1>Hi, I'm Martha! <br/>Cybersecurity | Educator | Creator</h1>
+<h1>Hi, I'm Martha! <br/>Incident Response | Technical Writing | Process Optimization | Passionately Curious</h1>
+<blockquote>Passionately curious security analyst and former educator with a strong foundation in security monitoring, threat detection, and incident response. Skilled in analyzing alerts from SIEM, M365, IAM, web, email, and endpoint security tools—correlating logs to detect, contain, and remediate adversary activity. Experienced in SOC playbook development, threat hunting, and security automation to enhance response efficiency. Recognized for clear, effective technical writing that improves documentation and enables knowledge transfer across teams. Team-focused and actively contributes to a culture of continuous improvement and security maturity—both on the clock and in the community—by supporting peers and contributing to open-source projects. Brings a unique blend of instructional experience, technical knowledge, and cross-functional collaboration to strengthen organizational resilience.</blockquote>
 
-<h2>👨‍💻 CrowdStrike Queries:</h2>
+<h2>👨‍💻 Response Tools :</h2>
 
-- [Incident Response Playbooks](https://github.com/marthajsosa/Incident-Response-Playbooks/tree/main)
-
-<h2>👨‍💻 CrowdStrike Dashboards:</h2>
-https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards
+- [Incident Response Playbooks - In Progress](https://github.com/marthajsosa/Incident-Response-Playbooks/tree/main)
+- [CrowdStrike Advanced Threat Detection Queries](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Queries/Advanced%20Threat%20Detection.md)
+- [Atomic Red Team Contribution T1135 Test 13](https://github.com/marthajsosa/atomic-red-team/blob/master/atomics/T1135/T1135.md)
 
 <h2>👨‍💻 Personal Projects:</h2>
 
