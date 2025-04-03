@@ -3,9 +3,9 @@
 <blockquote>Passionately curious security analyst and former educator with a strong foundation in security monitoring, threat detection, and incident response. Skilled in analyzing alerts from SIEM, M365, IAM, web, email, and endpoint security tools—correlating logs to detect, contain, and remediate adversary activity. Experienced in SOC playbook development, threat hunting, and security automation to enhance response efficiency. Recognized for clear, effective technical writing that improves documentation and enables knowledge transfer across teams. Team-focused and actively contributes to a culture of continuous improvement and security maturity—both on the clock and in the community—by supporting peers and contributing to open-source projects. Brings a unique blend of instructional experience, technical knowledge, and cross-functional collaboration to strengthen organizational resilience.</blockquote>
 <br/>
 <h2>Certifications:</h2>
-- CISM Exam Passed 4/1/2025 | Pending ISACA Experience Review
-- ISC² Systems Security Certified Practitioner (SSCP)
-- CompTIA A+ | Network+ | Security + | CySA+ | Pentest+
+- CISM Exam Passed 4/1/2025 | Pending ISACA Experience Review<br/>
+- ISC² Systems Security Certified Practitioner (SSCP)<br/>
+- CompTIA A+ | Network+ | Security + | CySA+ | Pentest+<br/>
 
 
 <h2>Technical Proficiencies</h2>
