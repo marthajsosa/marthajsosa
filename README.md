@@ -17,7 +17,7 @@ M.S. Cybersecurity & Information Assurance
 <br/>
 B.S. Cybersecurity & Information Assurance
 <br/>
-<h2>👨‍💻 Response Tools :</h2>
+<h2>👨‍💻 Most Recent Projects :</h2>
 
 - [Incident Response Playbooks - In Progress](https://github.com/marthajsosa/Incident-Response-Playbooks/tree/main)
 - [CrowdStrike Advanced Threat Detection Queries](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Queries/Advanced%20Threat%20Detection.md)
