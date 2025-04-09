@@ -1,12 +1,12 @@
 
 ## 🚧 Work in Progress
-# ⚡ CrowdStrike RTR PowerShell Scripts
+# CrowdStrike RTR PowerShell Scripts
 
 This repository contains a growing collection of **CrowdStrike Real Time Response (RTR) PowerShell scripts** designed to automate common investigative and remediation tasks in CrowdStrike Falcon.
 
 These scripts leverage the **PSFalcon** module and CrowdStrike's Real Time Response APIs to run commands remotely, collect forensic data, and respond to endpoint threats in a scalable and efficient manner.
 
-## 🎯 Purpose
+## Purpose
 
 The goal of this project is to provide repeatable, tested, and customizable PowerShell scripts to streamline incident response using RTR.
 
@@ -17,7 +17,7 @@ Use cases include:
 - Clearing credentials or disabling accounts
 - Uploading and executing custom tools (Put-and-run)
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 Before using these scripts, ensure you have the following:
 
@@ -28,7 +28,7 @@ Before using these scripts, ensure you have the following:
 - Your Falcon API credentials configured:  
   `Request-FalconToken -ClientId 'your_id' -ClientSecret 'your_secret'`
 
-## 📁 Script Categories
+## Script Categories
 
 Scripts are organized into the following types:
 
@@ -43,7 +43,7 @@ Scripts are organized into the following types:
 - **Automation**
   - Schedule tasks for follow-up actions or data collection
 
-## 📌 Examples
+## Examples
 
 Example usage of uploading and extracting local KAPE file to host and extracting:
 ```powershell
