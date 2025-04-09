@@ -1,8 +1,8 @@
-# 🎯 CrowdStrike Queries
+# CrowdStrike Queries
 
 This repository contains a collection of **CrowdStrike Falcon threat hunting queries**. These queries are designed to help defenders proactively hunt for malicious activity, uncover suspicious behavior, identify early signs of compromise across the enterprise, and drive continual improvement of the overall security posture.
 
-## 🔍 Purpose
+## Purpose
 
 The purpose of this collection is to:
 
@@ -12,7 +12,7 @@ The purpose of this collection is to:
 - Build a foundation for automated detections and response workflows
 - Provide collection of potential scheduled **Falcon SOAR** automated workflows
 
-## 📁 Organization by MITRE ATT&CK IDs
+## Organization by MITRE ATT&CK IDs
 
 All threat hunting queries in this repository are organized by **MITRE ATT&CK Tactics and Techniques**, following the [MITRE ATT&CK Enterprise Matrix](https://attack.mitre.org/matrices/enterprise/). Each folder corresponds to a tactic, and individual files are named by their technique ID and purpose.
 
@@ -37,7 +37,7 @@ All threat hunting queries in this repository are organized by **MITRE ATT&CK Ta
 - **Command & Control**
   - Beaconing patterns, dynamic DNS, tunneling behavior
 
-## 📁 Format
+## Format
 
 Each query entry includes:
 
@@ -46,7 +46,7 @@ Each query entry includes:
 - **Use Case**
 - **Detection Opportunity**
 
-## 🧰 Tools and Sources
+## Tools and Sources
 
 These queries are designed for use with:
 
@@ -57,6 +57,6 @@ These queries are designed for use with:
 
 Always test queries in a development or non-production environment before use in live environments. Adjust filters and conditions based on your organizational context to reduce false positives.
 
-## 🧩 Contributions
+## Contributions
 
 Contributions are welcome! Share your own hunting queries, improvements, or detections via pull requests.
