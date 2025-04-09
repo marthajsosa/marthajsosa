@@ -19,6 +19,9 @@ B.S. Cybersecurity & Information Assurance
 <br/>
 <h2>👨‍💻 Most Recent Projects :</h2>
 
+---
+
+- [Reporting and Communication Framework for Incident Responders](https://github.com/marthajsosa/Reporting-and-Communication/blob/main/README.md)
 - [Incident Response Playbooks - In Progress](https://github.com/marthajsosa/Incident-Response-Playbooks/tree/main)
 - [CrowdStrike Advanced Threat Detection Queries](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Queries/Advanced%20Threat%20Detection.md)
 - [Atomic Red Team Contribution T1135 Test 13](https://github.com/marthajsosa/atomic-red-team/blob/master/atomics/T1135/T1135.md)
