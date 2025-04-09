@@ -1,0 +1,105 @@
+name: Improbable Travel
+updateFrequency: never
+timeSelector: {}
+sharedTimeInterval:
+  enabled: false
+  isLive: false
+  start: 1d
+widgets:
+  a3597c78-2c69-4154-a97e-1360fb4f2c11:
+    x: 0
+    y: 0
+    description: Table view of users' logins from distant locations
+    height: 4
+    queryString: "\t// Get UserLogon events for Windows RDP sessions\n\t#event_simpleName=UserLogon\
+      \ event_platform=Win RemoteAddressIP4=*\n\n\t// Omit results if the RemoteAddressIP4\
+      \ field is RFC1819\n\t| !cidr(RemoteAddressIP4, subnet=[\"224.0.0.0/4\", \"\
+      10.0.0.0/8\", \"172.16.0.0/12\", \"192.168.0.0/16\", \"127.0.0.1/32\", \"169.254.0.0/16\"\
+      , \"0.0.0.0/32\"])\n\n\t// Create UserName + UserSid Hash\n\t| UserHash:=concat([UserName,\
+      \ UserSid]) | UserHash:=crypto:md5([UserHash])\n\n\t// Perform initial aggregation;\
+      \ groupBy() will sort by UserHash then LogonTime\n\t| groupBy([UserHash, LogonTime],\
+      \ function=[collect([UserName, UserSid, RemoteAddressIP4, ComputerName, aid])],\
+      \ limit=max)\n\n\t// Get geoIP for Remote IP\n\t| ipLocation(RemoteAddressIP4)\n\
+      \n\t// Use new neighbor() function to get results for previous row\n\t| neighbor([LogonTime,\
+      \ RemoteAddressIP4, UserHash, RemoteAddressIP4.country, RemoteAddressIP4.lat,\
+      \ RemoteAddressIP4.lon, ComputerName], prefix=prev)\n\n\t// Make sure neighbor()\
+      \ sequence does not span UserHash values; will occur at the end of a series\n\
+      \t| test(UserHash==prev.UserHash)\n\n\t// Calculate logon time delta in milliseconds\
+      \ from LogonTime to prev.LogonTime and round\n\t| LogonDelta:=(LogonTime-prev.LogonTime)*1000\n\
+      \t| LogonDelta:=round(LogonDelta)\n\n\t// Turn logon time delta from milliseconds\
+      \ to human readable\n\t| TimeToTravel:=formatDuration(LogonDelta, precision=2)\n\
+      \n\t// Calculate distance between Login 1 and Login 2\n\t| DistanceKm:=(geography:distance(lat1=\"\
+      RemoteAddressIP4.lat\", lat2=\"prev.RemoteAddressIP4.lat\", lon1=\"RemoteAddressIP4.lon\"\
+      , lon2=\"prev.RemoteAddressIP4.lon\"))/1000 | DistanceKm:=round(DistanceKm)\n\
+      \n\t// Calculate speed required to get from Login 1 to Login 2\n\t| SpeedKph:=DistanceKm/(LogonDelta/1000/60/60)\
+      \ | SpeedKph:=round(SpeedKph)\n\n\t// SET THRESHOLD: 1234kph is MACH 1\n\t|\
+      \ test(SpeedKph>100)\n\n\t// Format LogonTime Values\n\t| LogonTime:=LogonTime*1000\
+      \           | formatTime(format=\"%F %T %Z\", as=\"LogonTime\", field=\"LogonTime\"\
+      )\n\t| prev.LogonTime:=prev.LogonTime*1000 | formatTime(format=\"%F %T %Z\"\
+      , as=\"prev.LogonTime\", field=\"prev.LogonTime\")\n\n\t// Make fields easier\
+      \ to read\n\t| Travel:=format(format=\"%s → %s\", field=[prev.RemoteAddressIP4.country,\
+      \ RemoteAddressIP4.country])\n\t| IPs:=format(format=\"%s → %s\", field=[prev.RemoteAddressIP4,\
+      \ RemoteAddressIP4])\n\t| Logons:=format(format=\"%s → %s\", field=[prev.LogonTime,\
+      \ LogonTime])\n\n\t// Output results to table and sort by highest speed\n\t\
+      | table([aid, ComputerName, UserName, UserSid, System, IPs, Travel, DistanceKm,\
+      \ Logons, TimeToTravel, SpeedKph], limit=20000, sortby=SpeedKph, order=desc)\n\
+      \n\t// Format distance and speed fields to include comma and unit of measure\n\
+      \t| format(\"%,.0f km\",field=[\"DistanceKm\"], as=\"DistanceKm\")\n\t| format(\"\
+      %,.0f km/h\",field=[\"SpeedKph\"], as=\"SpeedKph\")\n\n    // Intelligence Graph;\
+      \ uncomment out one cloud\n    | rootURL  := \"https://falcon.us-2.crowdstrike.com/\"\
+      \n    | format(\"[Link](%sinvestigate/dashboards/user-search?isLive=false&sharedTime=true&start=7d&user=%s)\"\
+      , field=[\"rootURL\", \"UserName\"], as=\"User Search\")\n\n\t| sort(DistanceKm,\
+      \ order=desc, limit=20000)\n| DistanceKm!=\"null km\""
+    end: now
+    start: 30d
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns: {}
+      row-numbers-enabled: false
+    visualization: table-view
+    title: List
+    isLive: false
+    type: query
+  dbd1489f-69d7-46ab-b016-ee45c4ac3a5b:
+    x: 0
+    y: 4
+    height: 9
+    queryString: "\t// Get UserLogon events for Windows RDP sessions\n\t#event_simpleName=UserLogon\
+      \ event_platform=Win RemoteAddressIP4=*\n\n\t// Omit results if the RemoteAddressIP4\
+      \ field is RFC1819\n\t| !cidr(RemoteAddressIP4, subnet=[\"224.0.0.0/4\", \"\
+      10.0.0.0/8\", \"172.16.0.0/12\", \"192.168.0.0/16\", \"127.0.0.1/32\", \"169.254.0.0/16\"\
+      , \"0.0.0.0/32\"])\n\n\t// Create UserName + UserSid Hash\n\t| UserHash:=concat([UserName,\
+      \ UserSid]) | UserHash:=crypto:md5([UserHash])\n\n\t// Perform initial aggregation;\
+      \ groupBy() will sort by UserHash then LogonTime\n\t| groupBy([UserHash, LogonTime],\
+      \ function=[collect([UserName, UserSid, RemoteAddressIP4, ComputerName, aid])],\
+      \ limit=max)\n\n\t// Get geoIP for Remote IP\n\t| ipLocation(RemoteAddressIP4)\n\
+      \n\t// Use new neighbor() function to get results for previous row\n\t| neighbor([LogonTime,\
+      \ RemoteAddressIP4, UserHash, RemoteAddressIP4.country, RemoteAddressIP4.lat,\
+      \ RemoteAddressIP4.lon, ComputerName], prefix=prev)\n\n\t// Make sure neighbor()\
+      \ sequence does not span UserHash values; will occur at the end of a series\n\
+      \t| test(UserHash==prev.UserHash)\n\n\t// Calculate logon time delta in milliseconds\
+      \ from LogonTime to prev.LogonTime and round\n\t| LogonDelta:=(LogonTime-prev.LogonTime)*1000\n\
+      \t| LogonDelta:=round(LogonDelta)\n\n\t// Turn logon time delta from milliseconds\
+      \ to human readable\n\t| TimeToTravel:=formatDuration(LogonDelta, precision=2)\n\
+      \n\t// Calculate distance between Login 1 and Login 2\n\t| DistanceKm:=(geography:distance(lat1=\"\
+      RemoteAddressIP4.lat\", lat2=\"prev.RemoteAddressIP4.lat\", lon1=\"RemoteAddressIP4.lon\"\
+      , lon2=\"prev.RemoteAddressIP4.lon\"))/1000 | DistanceKm:=round(DistanceKm)\n\
+      \n\t// Calculate speed required to get from Login 1 to Login 2\n\t| SpeedKph:=DistanceKm/(LogonDelta/1000/60/60)\
+      \ | SpeedKph:=round(SpeedKph)\n\n\t// SET THRESHOLD: 1234kph is MACH 1\n\t|\
+      \ test(SpeedKph>100)\n\n\t// Format LogonTime Values\n\t| LogonTime:=LogonTime*1000\
+      \           | formatTime(format=\"%F %T %Z\", as=\"LogonTime\", field=\"LogonTime\"\
+      )\n\t| prev.LogonTime:=prev.LogonTime*1000 | formatTime(format=\"%F %T %Z\"\
+      , as=\"prev.LogonTime\", field=\"prev.LogonTime\")\n\n\t// Make fields easier\
+      \ to read\n\t| Travel:=format(format=\"%s → %s\", field=[prev.RemoteAddressIP4.country,\
+      \ RemoteAddressIP4.country])\n\t| IPs:=format(format=\"%s → %s\", field=[prev.RemoteAddressIP4,\
+      \ RemoteAddressIP4])\n\t| Logons:=format(format=\"%s → %s\", field=[prev.LogonTime,\
+      \ LogonTime])\n| worldMap(ip=\"RemoteAddressIP4\")\n"
+    visualization: world-map
+    end: now
+    start: 30d
+    width: 12
+    title: Map
+    isLive: false
+    type: query
+$schema: https://schemas.humio.com/dashboard/v0.19.0
