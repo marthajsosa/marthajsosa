@@ -122,7 +122,7 @@ process {
 
 ```
 
-Example: Clear stored credentials via scheduled task:
+Example: 
 ```powershell
 example
 ```
