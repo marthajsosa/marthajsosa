@@ -10,8 +10,8 @@ This repository contains a curated collection of CrowdStrike resources developed
 - **[Fusion Workflows](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Fusion%20Workflows)** *(In Progress)*  
   Modular logic and alerting workflows for automation within CrowdStrike Fusion, accompanied by JSON schemas for quick deployment.
 
-- **[Queries](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Queries)**  
-  Useful Falcon Query Language (FQL) examples to assist in identifying suspicious processes, behaviors, and endpoint activity. *(In Progress)*  
+- **[Queries](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Queries)** *(In Progress)*  
+  Useful Falcon Query Language (FQL) examples to assist in identifying suspicious processes, behaviors, and endpoint activity.   
 
 - **[RTR_Custom_Scripts](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/RTR%20Custom%20Scripts)** *(In Progress)*  
   Custom PowerShell scripts for use with CrowdStrike Real Time Response (RTR), including tools for triage, credential clearing, and event collection.
