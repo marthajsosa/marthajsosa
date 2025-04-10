@@ -1,0 +1,15 @@
+{
+"$schema": "http://json-schema.org/draft-07/schema#",
+"properties": {
+"aid": {
+"type": "string",
+"description": "Unique identifier of the computer (e.g., hostname, asset tag)",
+"format": "aid"
+}
+},
+"required": [
+"aid"
+],
+"additionalProperties": false,
+"type": "object"
+}
