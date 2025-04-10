@@ -1,5 +1,4 @@
-Sample JSON input/output schemas
-Document Common Automation Patterns
+## 🚧 Work in Progress
 # CrowdStrike Fusion Workflows
 
 This repository contains a growing collection of **CrowdStrike Fusion workflows** designed to automate detection, alert enrichment, and response actions across your security stack. These workflows are built to accelerate decision-making and reduce incident response time by codifying logic in a repeatable, transparent way.
