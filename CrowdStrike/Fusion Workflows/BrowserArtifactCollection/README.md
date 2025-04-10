@@ -1,37 +1,52 @@
-# Falcon Fusion Workflow: Browser Artifact Collection
+# Falcon Fusion Workflow: Web Browser Artifact Collection
 
-This project contains a CrowdStrike Falcon Fusion workflow and associated response scripts for collecting web browser artifacts using KAPE and SQLECmd.
+This repository documents a complete CrowdStrike Fusion workflow for collecting browser history artifacts using KAPE and SQLECmd. The workflow is designed to run on-demand against Windows endpoints and includes file validation, compression, and retrieval logic. This workflow utilizes Kroll's KAPE took which a free, open-source forensic tool.
 
 ## Purpose
 
-The workflow performs a structured collection of browser history and related SQLite data from supported web browsers (Chrome, Edge, Firefox) on Windows endpoints.
+Automates the retrieval of browser data such as:
+- History
+- Cookies
+- Downloads
+- Top Sites
+- Keyword Searches (Google searches)
+- History Visits
+- Favicons
+- Omnibox Shortcuts
 
-## Workflow Sequence
+Collected data is compressed and retrieved for forensic analysis.
 
-1. **Unzip KAPE**
-   - Deploy and extract KAPE on target host
+## Workflow Overview
 
-2. **Remove Current Maps from SQLECmd**
-   - Deletes existing map files to ensure a clean update
+Refer to [WebBrowserHistory.drawio](diagrams/WebBrowserHistory.png) for the full workflow logic.
 
-3. **Update SQLECmd Maps**
-   - Retrieves the latest SQLECmd map files for accurate parsing
+### Key Steps
 
-4. **Grab Web Browser Artifacts**
-   - Uses KAPE and target modules to collect browser artifacts
+1. **On-Demand Trigger**
+2. **Device Details Lookup**
+3. **Platform + Host Group Checks**
+4. **Unzip KAPE**
+5. **Remove SQLECmd Maps**
+6. **Update SQLECmd Maps**
+7. **Run KAPE with SQLECmd to collect browser artifacts**
+8. **Zip the results**
+9. **Check if file exists**
+10. **Retrieve file**
+11. **Send email if file is retrieved and under size limit**
 
-5. **Zip Web Browser History**
-   - Compresses extracted artifacts into a portable archive for analysis
+## JSON Schemas
 
-## Requirements
+- `GatherWebBrowserArtifactsOutputSchema.json`: Defines the required fields (aid, hostname, asset tag)
+- `ZipWebBrowserHistoryJSONOutputSchema.json`: Validates existence and name of the resulting artifact file
 
-- Falcon RTR with scripting permissions
-- Windows host with PowerShell
-- KAPE modules pre-uploaded or available via `unzip KAPE` step
-- Uploaded scripts in Falcon Console under Host Setup and Management
+## Scripts
 
-## Output
+Each step is executed by a standalone PowerShell script, uploaded under **Host Setup and Management > Response Scripts and Files**.
 
-A ZIP file containing browser history artifacts will be saved to:
-
+See `/scripts` for:
+- `UnzipKAPE.ps1`
+- `RemobeCurrentSQLECmdMaps.ps1`
+- `UpdateSQLECmdMaps.ps1`
+- `GatherWebBrowserArtifacts.ps1`
+- `ZipWebBrowserHistory.ps1`
 
