@@ -16,7 +16,7 @@ The purpose of this collection is to:
 
 All threat hunting queries in this repository are organized by **MITRE ATT&CK Tactics and Techniques**, following the [MITRE ATT&CK Enterprise Matrix](https://attack.mitre.org/matrices/enterprise/). Each folder corresponds to a tactic, and individual files are named by their technique ID and purpose.
 
-- **Initial Access**
+- **[Initial Access](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Queries/Initial%20Access)**
   - Malicious documents, macro execution, suspicious file drops
 - **Execution**
   - Unusual scripting (PowerShell, Python, WScript), LOLBins
