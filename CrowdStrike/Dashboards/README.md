@@ -16,7 +16,7 @@ The purpose of this collection is to:
 
 All dashboards are saved in a format compatible with CrowdStrike Falcon dashboards and include usage notes.
 
-- **[Impossible Travel Dashboard](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards/ImpossibleTravel)**  
+- **[ImprobableTravel Travel Dashboard](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Dashboards/ImprobableTravel.yaml)**  
   Highlights login activity from geographically distant locations within an unrealistically short timeframe.  
   *Use Case:* Detect potential account compromise, VPN misuse, or adversary-in-the-middle attacks.
 
