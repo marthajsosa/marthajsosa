@@ -26,25 +26,6 @@ Each workflow folder includes:
 - **Workflow Diagram (`workflow.drawio`)**  
   A visual flowchart of the logic, decision branches, and response actions.
 
-## Available Workflows
-
-- **[Example:)**  
-  *Use Case:* Triage high-severity alerts by adding contextual fields (hostname, user, geolocation) and initiating an analyst notification.  
-  *Includes:* JSON logic, schemas, and a visual flowchart.
-
-More workflows coming soon.
-
-## Format
-
-Each workflow entry includes:
-
-- **Use Case / Purpose**  
-- **Trigger Conditions**  
-- **Key Logic Branches**  
-- **Automated Actions**  
-- **Input and Output Schemas**  
-- **draw.io Diagram**
-
 ## Contributions
 
 Contributions are welcome!
