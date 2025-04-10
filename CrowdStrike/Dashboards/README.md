@@ -20,7 +20,7 @@ All dashboards are saved in a format compatible with CrowdStrike Falcon dashboar
   Highlights login activity from geographically distant locations within an unrealistically short timeframe.  
   *Use Case:* Detect potential account compromise, VPN misuse, or adversary-in-the-middle attacks.
 
-- **[Investigate Host Dashboard](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards/InvestigateHost)**  
+- **[Investigate Host Dashboard](CrowdStrike/Dashboards/InvestigateHost.yaml)**  
   A focused one-pager to assist in quickly triaging a host.  
   *Use Case:* Understand recent activity, parent/child process relationships, network behavior, and login events tied to a specific host.
 
