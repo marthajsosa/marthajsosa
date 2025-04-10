@@ -16,13 +16,13 @@ The purpose of this collection is to:
 
 Each workflow folder includes:
 
-- **Input Schema (`input_schema.json`)**  
+- **Input Schema**  
   Defines expected alert fields, values, and data structure used to trigger the workflow.
 
-- **Output Schema (`output_schema.json`)**  
+- **Output Schema**  
   Describes the resulting data structure, transformations, or actions executed by the workflow.
 
-- **Workflow Diagram (`workflow.drawio`)**  
+- **Workflow Diagram**  
   A visual flowchart of the logic, decision branches, and response actions.
 
 ## Contributions
