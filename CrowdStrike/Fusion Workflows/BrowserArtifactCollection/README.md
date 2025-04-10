@@ -18,7 +18,7 @@ Collected data is compressed and retrieved for forensic analysis.
 
 ## Workflow Overview
 
-Refer to [WebBrowserHistory.drawio](diagrams/WebBrowserHistory.png) for the full workflow logic.
+![Workflow](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Fusion%20Workflows/BrowserArtifactCollection/assets/WebBrowserHistory.png)
 
 ### Key Steps
 
