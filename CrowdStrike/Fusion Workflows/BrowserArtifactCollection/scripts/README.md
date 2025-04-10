@@ -22,3 +22,14 @@ Runs KAPE with `WebBrowsers` and `SQLECmd` modules to collect history, cookies, 
 ### ZipWebBrowserHistory.ps1
 Compresses the collected artifacts into a ZIP archive at:
 
+## JSON Schemas
+
+These JSON schemas are used to define inputs and validate outputs within the Falcon Fusion workflow.
+
+### WorkflowTriggerJsonSchema.json (trigger schema)
+Defines the required input for the workflow, typically an identifier such as hostname or asset tag.
+
+### Custom Script Output Schemas
+Used in two stages:
+- **GatherWebBrowserArtifactsOutputSchema.json**: Validates that artifacts were successfully collected.
+- **ZipWebBrowserHistoryJSONOutputSchema.json**: Confirms the ZIP file exists and is named correctly.
