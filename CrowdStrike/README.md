@@ -4,16 +4,16 @@ This repository contains a curated collection of CrowdStrike resources developed
 
 ## Contents
 
-- **[Dashboards](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards)**  
+- **[Dashboards](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards)** *(In Progress)*
   Pre-built dashboards to assist with threat hunting, user behavior analysis, and visibility into suspicious activity.
 
-- **[Fusion Workflows](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Fusion%20Workflows)** *(coming soon)*  
+- **[Fusion Workflows](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Fusion%20Workflows)** *(In Progress)*  
   Modular logic and alerting workflows for automation within CrowdStrike Fusion, accompanied by JSON schemas for quick deployment.
 
 - **[Queries](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Queries)**  
-  Useful Falcon Query Language (FQL) examples to assist in identifying suspicious processes, behaviors, and endpoint activity.
+  Useful Falcon Query Language (FQL) examples to assist in identifying suspicious processes, behaviors, and endpoint activity. *(In Progress)*  
 
-- **[RTR_Custom_Scripts](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/RTR%20Custom%20Scripts)** *(coming soon)*  
+- **[RTR_Custom_Scripts](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/RTR%20Custom%20Scripts)** *(In Progress)*  
   Custom PowerShell scripts for use with CrowdStrike Real Time Response (RTR), including tools for triage, credential clearing, and event collection.
 
 ## Purpose
