@@ -20,7 +20,7 @@ This allows defenders to:
 
 ## Workflow Overview
 
-add pic
+![SymantecAVLogsImage](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Fusion%20Workflows/SymantecAVLogs/assets/SymantecAVLogs.png)
 
 ---
 
