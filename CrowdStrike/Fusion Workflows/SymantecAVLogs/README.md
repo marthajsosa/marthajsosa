@@ -56,3 +56,4 @@ Scripts used in this workflow:
 - `UnzipKAPE.ps1`
 - `GatherSymantecAVLogs.ps1`
 - `ZipSymantecAVLogs.ps1`
+- `SymantecAVLogsCleanup.ps1`
