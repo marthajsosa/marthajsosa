@@ -1,28 +1,24 @@
-# Falcon Fusion Workflow: Symantec AV Log Collection
+# Falcon Fusion Workflow: Web Browser Artifact Collection
 
-This repository documents a complete **CrowdStrike Fusion** workflow for collecting **Symantec Antivirus logs** from Windows endpoints using **KAPE**. The workflow is designed to run **on-demand** and includes file validation, compression, and retrieval logic. It uses Kroll's [KAPE](https://www.kroll.com/en/services/cyber-risk/incident-response-litigation-support/kroll-artifact-parser-extractor-kape), a free, open-source forensic triage tool.
-
----
+This repository documents a complete CrowdStrike Fusion workflow for collecting browser history artifacts using KAPE and SQLECmd. The workflow is designed to run on-demand against Windows endpoints and includes file validation, compression, and retrieval logic. This workflow utilizes Kroll's KAPE took which a free, open-source forensic tool.
 
 ## Purpose
 
-Automates the retrieval of **Symantec AV logs** from endpoints for incident response and forensic analysis.  
-This allows defenders to:
+Automates the retrieval of browser data such as:
+- History
+- Cookies
+- Downloads
+- Top Sites
+- Keyword Searches (Google searches)
+- History Visits
+- Favicons
+- Omnibox Shortcuts
 
-- Review recent detections, quarantines, and termiated processes to verify activity
-- Investigate signature updates
-- Identify tampering or unusual AV activity
-- Support malware incident correlation
-- Supplement root cause analsis
-- Initiate log collection upon host visibility or specified event-based triggers
-
----
+Collected data is compressed and retrieved for forensic analysis.
 
 ## Workflow Overview
 
-add pic
-
----
+![Workflow](https://github.com/marthajsosa/marthajsosa/blob/main/CrowdStrike/Fusion%20Workflows/BrowserArtifactCollection/assets/WebBrowserHistory.png)
 
 ### Key Steps
 
@@ -30,30 +26,26 @@ add pic
 2. **Device Details Lookup**
 3. **Platform + Host Group Checks**
 4. **Unzip KAPE**
-7. **Run KAPE - Symantec AV logs**
-8. **Zip the output folder**
+5. **Remove SQLECmd Maps**
+6. **Update SQLECmd Maps**
+7. **Run KAPE with SQLECmd to collect browser artifacts**
+8. **Zip the results**
 9. **Check if file exists**
-10. **Retrieve the zipped logs**
-11. **Send email if logs are retrieved and under size limit**
-12. **Cleanup**
-
----
+10. **Retrieve file**
+11. **Send email if file is retrieved and under size limit**
 
 ## JSON Schemas
 
-- `GatherSymantecAVLogsOutputSchema.json`: Validates inputs such as `aid`, `hostname`, and log path
-- `ZipSymantecAVLogsOutputSchema.json`: Ensures output file path, name, and existence are captured
-
----
+- `GatherWebBrowserArtifactsOutputSchema.json`: Defines the required fields (aid, hostname, asset tag)
+- `ZipWebBrowserHistoryJSONOutputSchema.json`: Validates existence and name of the resulting artifact file
 
 ## Scripts
 
-Each step is executed by a standalone PowerShell script, uploaded under:
+Each step is executed by a standalone PowerShell script, uploaded under **Host Setup and Management > Response Scripts and Files**.
 
-**CrowdStrike Console → Host Setup and Management → Response Scripts and Files**
-
-Scripts used in this workflow:
-
+See `/scripts` for:
 - `UnzipKAPE.ps1`
-- `GatherSymantecAVLogs.ps1`
-- `ZipSymantecAVLogs.ps1`
+- `RemobeCurrentSQLECmdMaps.ps1`
+- `UpdateSQLECmdMaps.ps1`
+- `GatherWebBrowserArtifacts.ps1`
+- `ZipWebBrowserHistory.ps1`
