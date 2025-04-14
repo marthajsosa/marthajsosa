@@ -4,9 +4,6 @@ This repository contains a curated collection of CrowdStrike resources developed
 
 ## Contents
 
-- **[Dashboards](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Dashboards)** *(In Progress)*  
-  Pre-built dashboards to assist with threat hunting, user behavior analysis, and visibility into suspicious activity.
-
 - **[Fusion Workflows](https://github.com/marthajsosa/marthajsosa/tree/main/CrowdStrike/Fusion%20Workflows)** *(In Progress)*  
   Modular logic and alerting workflows for automation within CrowdStrike Fusion, accompanied by JSON schemas for quick deployment.
 
